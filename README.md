@@ -6,9 +6,11 @@ Página única em HTML/CSS puro, sem build, pronta para deploy no Vercel.
 ## Estrutura
 
 ```
-index.html        página completa (11 seções da proposta)
-style.css         design system (preto / off-white / dourado)
-assets/logo.svg   logotipo Trizos Company
+index.html               página completa (11 seções da proposta)
+style.css                design system (preto / off-white / dourado)
+assets/logo-branca.png   logotipo horizontal — uso sobre fundo escuro
+assets/logo-escura.png   logotipo horizontal — uso sobre fundo claro
+assets/simbolo.png       símbolo isolado — favicon e usos compactos
 ```
 
 ## Rodar localmente
@@ -27,4 +29,3 @@ O link gerado (`https://proposta-nathalia.vercel.app`) é o que se envia para a 
 ## Ajustes pendentes
 
 - `index.html`: trocar o número do WhatsApp no botão "Marcar reunião de alinhamento"
-- `assets/logo.svg`: substituir pelo arquivo oficial da marca, se houver versão vetorial original
