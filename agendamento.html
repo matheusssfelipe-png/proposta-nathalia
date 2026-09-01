@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Agendar reunião de alinhamento — Nathalia Mazzei | Trizos Company</title>
+<meta name="robots" content="noindex">
+<link rel="icon" href="assets/simbolo.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700&family=DM+Sans:opsz,wght@9..40,400;9..40,500;9..40,600;9..40,700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<header class="nav is-stuck">
+  <div class="nav__inner">
+    <a class="nav__logo" href="index.html"><img src="assets/logo-branca.png" alt="Trizos Company"></a>
+    <a href="index.html" class="btn btn--ghost btn--sm nav__cta">← Voltar à proposta</a>
+  </div>
+</header>
+
+<main class="sched">
+  <div class="wrap">
+
+    <div class="sched__head">
+      <p class="eyebrow">Aceite registrado</p>
+      <h1 class="sched__title">Escolha o melhor dia para a nossa reunião</h1>
+      <p class="sched__sub">
+        Falta só marcar o alinhamento. Escolha o dia e o horário que preferir —
+        a reunião dura cerca de 40 minutos e é onde detalhamos o briefing.
+      </p>
+    </div>
+
+    <!-- resumo do que foi aceito -->
+    <section class="summary" id="summary">
+      <dl>
+        <div><dt>Nome</dt><dd id="s-nome">—</dd></div>
+        <div><dt>Contratação</dt><dd id="s-escopo">—</dd></div>
+        <div><dt>Pagamento</dt><dd id="s-pagamento">—</dd></div>
+        <div id="row-obs" hidden><dt>Observações</dt><dd id="s-obs">—</dd></div>
+      </dl>
+    </section>
+
+    <!-- calendário + horários -->
+    <section class="booking">
+      <div class="cal">
+        <div class="cal__nav">
+          <button type="button" class="cal__arrow" id="prev" aria-label="Mês anterior">←</button>
+          <h3 id="mes-ano"></h3>
+          <button type="button" class="cal__arrow" id="next" aria-label="Próximo mês">→</button>
+        </div>
+        <div class="cal__week" aria-hidden="true">
+          <span>Dom</span><span>Seg</span><span>Ter</span>
+          <span>Qua</span><span>Qui</span><span>Sex</span><span>Sáb</span>
+        </div>
+        <div class="cal__days" id="dias"></div>
+      </div>
+
+      <div class="slots">
+        <p class="slots__label">Horário</p>
+        <div class="slots__grid" id="horarios"></div>
+        <p class="slots__hint">
+          Reuniões de segunda a sexta. Escolha um dia no calendário para liberar os horários.
+        </p>
+      </div>
+    </section>
+
+    <!-- confirmação -->
+    <section class="confirm">
+      <p class="confirm__label">Reunião selecionada</p>
+      <p class="confirm__date is-idle" id="resumo-data">Selecione um dia e um horário</p>
+      <button type="button" class="btn btn--gold" id="confirmar" disabled>Confirmar agendamento</button>
+      <p class="confirm__note">
+        Ao confirmar, o aceite e o horário são enviados para o WhatsApp da Trizos Company.
+      </p>
+    </section>
+
+  </div>
+</main>
+
+<footer class="foot">
+  <div class="wrap foot__inner">
+    <img class="foot__logo" src="assets/logo-branca.png" alt="Trizos Company">
+    <p>Proposta Comercial — Nathalia Mazzei</p>
+  </div>
+</footer>
+
+<script src="js/config.js"></script>
+<script src="js/agendamento.js"></script>
+</body>
+</html>

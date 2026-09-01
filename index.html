@@ -433,8 +433,8 @@
         <span>Li e concordo com o escopo, o prazo e as condições apresentados nesta proposta.</span>
       </label>
 
-      <button type="submit" class="btn btn--gold btn--block">Enviar aceite</button>
-      <p class="accept__note" id="aceite-nota">Marque o aceite acima para liberar o envio.</p>
+      <button type="submit" class="btn btn--gold btn--block" id="btn-enviar">Aceitar e agendar reunião</button>
+      <p class="accept__note" id="aceite-nota">Na próxima etapa você escolhe o dia e o horário da reunião.</p>
     </form>
   </div>
 </section>
@@ -447,6 +447,7 @@
   </div>
 </footer>
 
+<script src="js/config.js"></script>
 <script>
   // reveal on scroll
   var io = new IntersectionObserver(function (entries) {
@@ -464,51 +465,79 @@
 
   /* -----------------------------------------------------------
      Formulário de aceite
-     >>> TROCAR AQUI PELO NÚMERO REAL (DDI + DDD + número) <<<
+
+     Fechou (site / gestão / ambos) -> segue para o agendamento
+     Só tem dúvidas                 -> vai direto para a conversa
      ----------------------------------------------------------- */
-  var WHATSAPP = '5511999999999';
+  var DUVIDA = 'Ainda tenho dúvidas, quero conversar';
 
   var form = document.getElementById('form-aceite');
   var nota = document.getElementById('aceite-nota');
+  var selEscopo = document.getElementById('escopo');
+  var btnEnviar = document.getElementById('btn-enviar');
+
+  // o rótulo do botão acompanha a intenção da escolha
+  function ajustarBotao() {
+    var duvida = selEscopo.value === DUVIDA;
+    btnEnviar.textContent = duvida ? 'Falar no WhatsApp' : 'Aceitar e agendar reunião';
+    nota.textContent = duvida
+      ? 'Você será levada para a conversa no WhatsApp.'
+      : 'Na próxima etapa você escolhe o dia e o horário da reunião.';
+    nota.style.color = '';
+  }
+
+  selEscopo.addEventListener('change', ajustarBotao);
+  ajustarBotao();
 
   form.addEventListener('submit', function (ev) {
     ev.preventDefault();
 
     var concordo = document.getElementById('concordo');
-    if (!concordo.checked) {
-      nota.textContent = 'É preciso marcar o aceite antes de enviar.';
+    var escopo = selEscopo.value;
+    var duvida = escopo === DUVIDA;
+
+    // o aceite formal só é exigido de quem está fechando
+    if (!duvida && !concordo.checked) {
+      nota.textContent = 'É preciso marcar o aceite antes de continuar.';
       nota.style.color = '#E0625C';
       concordo.focus();
       return;
     }
 
-    var nome = document.getElementById('nome').value.trim() || 'Nathalia Mazzei';
-    var escopo = document.getElementById('escopo').value;
-    var pagamento = document.getElementById('pagamento').value;
-    var obs = document.getElementById('observacoes').value.trim();
+    var dados = {
+      nome: document.getElementById('nome').value.trim() || 'Nathalia Mazzei',
+      escopo: escopo,
+      pagamento: document.getElementById('pagamento').value,
+      observacoes: document.getElementById('observacoes').value.trim()
+    };
 
-    var linhas = [
-      'ACEITE DA PROPOSTA',
-      '',
-      'Nome: ' + nome,
-      'Contratação: ' + escopo,
-      'Pagamento do site: ' + pagamento,
-      '',
-      'Confirmo que li e concordo com o escopo, o prazo e as condições da proposta.'
-    ];
+    if (duvida) {
+      var linhas = ['Olá! Vi a proposta e queria conversar antes de decidir.', '', 'Nome: ' + dados.nome];
+      if (dados.observacoes) linhas.push('', 'Dúvidas:', dados.observacoes);
 
-    if (obs) {
-      linhas.push('', 'Observações:', obs);
+      nota.textContent = 'Abrindo o WhatsApp…';
+      window.location.href = 'https://wa.me/' + window.TRIZOS.whatsapp +
+                             '?text=' + encodeURIComponent(linhas.join('\n'));
+      return;
     }
 
-    nota.textContent = 'Abrindo o WhatsApp com o aceite preenchido…';
-    nota.style.color = '';
+    try {
+      sessionStorage.setItem('aceiteProposta', JSON.stringify(dados));
+    } catch (e) {
+      // navegador sem sessionStorage: cai para o WhatsApp em vez de travar
+      var alt = [
+        'ACEITE DA PROPOSTA', '',
+        'Nome: ' + dados.nome,
+        'Contratação: ' + dados.escopo,
+        'Pagamento do site: ' + dados.pagamento
+      ];
+      if (dados.observacoes) alt.push('', 'Observações:', dados.observacoes);
+      window.location.href = 'https://wa.me/' + window.TRIZOS.whatsapp +
+                             '?text=' + encodeURIComponent(alt.join('\n'));
+      return;
+    }
 
-    window.open(
-      'https://wa.me/' + WHATSAPP + '?text=' + encodeURIComponent(linhas.join('\n')),
-      '_blank',
-      'noopener'
-    );
+    window.location.href = 'agendamento.html';
   });
 </script>
 
