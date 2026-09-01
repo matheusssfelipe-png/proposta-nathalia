@@ -30,12 +30,17 @@
 
   document.getElementById('s-nome').textContent = aceite.nome;
   document.getElementById('s-escopo').textContent = aceite.escopo;
-  document.getElementById('s-pagamento').textContent = aceite.pagamento;
 
-  if (aceite.observacoes) {
-    document.getElementById('s-obs').textContent = aceite.observacoes;
-    document.getElementById('row-obs').hidden = false;
+  // cada linha só aparece se fizer parte do que foi contratado
+  function preencher(idLinha, idValor, valor) {
+    if (!valor) return;
+    document.getElementById(idValor).textContent = valor;
+    document.getElementById(idLinha).hidden = false;
   }
+
+  preencher('row-pagamento', 's-pagamento', aceite.pagamento);
+  preencher('row-plano', 's-plano', aceite.plano);
+  preencher('row-obs', 's-obs', aceite.observacoes);
 
   /* ---------- estado ---------- */
   var hoje = new Date();
@@ -180,14 +185,19 @@
       'ACEITE DA PROPOSTA',
       '',
       'Nome: ' + aceite.nome,
-      'Contratação: ' + aceite.escopo,
-      'Pagamento do site: ' + aceite.pagamento,
+      'Contratação: ' + aceite.escopo
+    ];
+
+    if (aceite.pagamento) linhas.push('Site (pagamento único): ' + aceite.pagamento);
+    if (aceite.plano) linhas.push('Gestão de mídias (mensal): ' + aceite.plano);
+
+    linhas.push(
       '',
       'Confirmo que li e concordo com o escopo, o prazo e as condições da proposta.',
       '',
       'REUNIÃO DE ALINHAMENTO',
       dataPorExtenso(dataEscolhida) + ' às ' + horaEscolhida
-    ];
+    );
 
     if (aceite.observacoes) {
       linhas.push('', 'Observações:', aceite.observacoes);

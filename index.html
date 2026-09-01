@@ -335,6 +335,44 @@
   </div>
 </section>
 
+<!-- ======================= RESUMO DO INVESTIMENTO ======================= -->
+<section class="sec sec--dark sec--tight" id="resumo-investimento">
+  <div class="wrap">
+    <p class="eyebrow">Resumo do investimento</p>
+    <h2 class="sec__title">São dois pagamentos separados</h2>
+
+    <div class="grid grid-2">
+      <article class="card card--dark reveal">
+        <span class="badge">Pagamento único</span>
+        <h3>Site portfólio</h3>
+        <p class="card__value card__value--lg">R$ 2.500,00</p>
+        <p>
+          Cobrado uma única vez, na contratação. Pode ser à vista com 15% de desconto,
+          em até 6x sem juros no cartão ou dividido em duas parcelas.
+        </p>
+        <p class="card__foot">Entrega em 15–20 dias úteis</p>
+      </article>
+
+      <article class="card card--dark reveal">
+        <span class="badge badge--gold">Mensalidade</span>
+        <h3>Gestão de mídias</h3>
+        <p class="card__value card__value--lg">R$ 900,00 a R$ 1.300,00 <span>/mês</span></p>
+        <p>
+          Cobrado todo mês, conforme os serviços escolhidos: R$ 900,00 apenas com a gestão
+          de tráfego pago, ou R$ 1.300,00 somando a estratégia de conteúdo.
+        </p>
+        <p class="card__foot">Fidelidade mínima de 3 meses</p>
+      </article>
+    </div>
+
+    <p class="fineprint fineprint--center">
+      As duas frentes são independentes: é possível contratar apenas o site, apenas a gestão
+      mensal ou as duas juntas. A verba de anúncio é paga por Nathalia direto na plataforma
+      e não entra em nenhum destes valores.
+    </p>
+  </div>
+</section>
+
 <!-- ======================= RESPONSABILIDADES ======================= -->
 <section class="sec sec--cream" id="responsabilidades">
   <div class="wrap">
@@ -413,12 +451,21 @@
         </select>
       </div>
 
-      <div class="field">
-        <label for="pagamento">Forma de pagamento do site</label>
+      <div class="field" id="campo-pagamento">
+        <label for="pagamento">Pagamento do site <span class="field__tag">pagamento único</span></label>
         <select id="pagamento" name="pagamento">
           <option value="À vista — R$ 2.100,00 (15% de desconto)">À vista — R$ 2.100,00 (15% de desconto)</option>
           <option value="No cartão — 6x de R$ 417,00 sem juros">No cartão — 6x de R$ 417,00 sem juros</option>
           <option value="Parcelado — R$ 1.250,00 + R$ 1.250,00">Parcelado — R$ 1.250,00 + R$ 1.250,00</option>
+          <option value="Prefiro definir na reunião">Prefiro definir na reunião</option>
+        </select>
+      </div>
+
+      <div class="field" id="campo-plano">
+        <label for="plano">Gestão de mídias <span class="field__tag">mensalidade</span></label>
+        <select id="plano" name="plano">
+          <option value="Completa — R$ 1.300,00/mês (tráfego pago + estratégia de conteúdo)">Completa — R$ 1.300,00/mês (tráfego pago + estratégia)</option>
+          <option value="Somente tráfego pago — R$ 900,00/mês">Somente tráfego pago — R$ 900,00/mês</option>
           <option value="Prefiro definir na reunião">Prefiro definir na reunião</option>
         </select>
       </div>
@@ -470,15 +517,32 @@
      Só tem dúvidas                 -> vai direto para a conversa
      ----------------------------------------------------------- */
   var DUVIDA = 'Ainda tenho dúvidas, quero conversar';
+  var SO_SITE = 'Somente o site portfólio';
+  var SO_GESTAO = 'Somente a gestão mensal de mídias';
 
   var form = document.getElementById('form-aceite');
   var nota = document.getElementById('aceite-nota');
   var selEscopo = document.getElementById('escopo');
   var btnEnviar = document.getElementById('btn-enviar');
+  var campoPagamento = document.getElementById('campo-pagamento');
+  var campoPlano = document.getElementById('campo-plano');
 
-  // o rótulo do botão acompanha a intenção da escolha
-  function ajustarBotao() {
+  function querSite() {
+    var v = selEscopo.value;
+    return v !== DUVIDA && v !== SO_GESTAO;
+  }
+  function querGestao() {
+    var v = selEscopo.value;
+    return v !== DUVIDA && v !== SO_SITE;
+  }
+
+  // só pergunta o pagamento do que ela de fato está contratando
+  function ajustarFormulario() {
     var duvida = selEscopo.value === DUVIDA;
+
+    campoPagamento.hidden = !querSite();
+    campoPlano.hidden = !querGestao();
+
     btnEnviar.textContent = duvida ? 'Falar no WhatsApp' : 'Aceitar e agendar reunião';
     nota.textContent = duvida
       ? 'Você será levada para a conversa no WhatsApp.'
@@ -486,8 +550,8 @@
     nota.style.color = '';
   }
 
-  selEscopo.addEventListener('change', ajustarBotao);
-  ajustarBotao();
+  selEscopo.addEventListener('change', ajustarFormulario);
+  ajustarFormulario();
 
   form.addEventListener('submit', function (ev) {
     ev.preventDefault();
@@ -507,7 +571,8 @@
     var dados = {
       nome: document.getElementById('nome').value.trim() || 'Nathalia Mazzei',
       escopo: escopo,
-      pagamento: document.getElementById('pagamento').value,
+      pagamento: querSite() ? document.getElementById('pagamento').value : '',
+      plano: querGestao() ? document.getElementById('plano').value : '',
       observacoes: document.getElementById('observacoes').value.trim()
     };
 
@@ -528,9 +593,10 @@
       var alt = [
         'ACEITE DA PROPOSTA', '',
         'Nome: ' + dados.nome,
-        'Contratação: ' + dados.escopo,
-        'Pagamento do site: ' + dados.pagamento
+        'Contratação: ' + dados.escopo
       ];
+      if (dados.pagamento) alt.push('Pagamento do site: ' + dados.pagamento);
+      if (dados.plano) alt.push('Gestão de mídias: ' + dados.plano);
       if (dados.observacoes) alt.push('', 'Observações:', dados.observacoes);
       window.location.href = 'https://wa.me/' + window.TRIZOS.whatsapp +
                              '?text=' + encodeURIComponent(alt.join('\n'));

@@ -343,6 +343,35 @@ a{ color:inherit; }
 }
 .card--dark .card__value{ color:var(--white); }
 
+/* selo de tipo de cobrança */
+.badge{
+  display:inline-block; align-self:flex-start;
+  padding:7px 15px; margin-bottom:22px;
+  border-radius:999px;
+  font-size:11px; font-weight:700;
+  letter-spacing:.16em; text-transform:uppercase;
+  background:rgba(255,255,255,.06);
+  border:1px solid var(--line-dark-2);
+  color:var(--on-dark-mu);
+}
+.badge--gold{
+  background:rgba(212,166,43,.12);
+  border-color:var(--line-gold);
+  color:var(--gold);
+}
+.card__value--lg{
+  font-size:clamp(1.7rem, 3vw, 2.35rem);
+  color:var(--gold) !important;
+  margin-bottom:18px !important;
+}
+.card__value--lg span{ font-size:.6em; }
+
+.fineprint--center{
+  text-align:center; margin-inline:auto; font-style:normal;
+  padding-top:34px; margin-top:34px;
+  border-top:1px solid var(--line-dark);
+}
+
 /* =========================================================
    TILES (escopo)
    ========================================================= */
@@ -538,12 +567,20 @@ a{ color:inherit; }
 
 .field{ margin-bottom:24px; }
 .field label{
-  display:block;
+  display:flex; align-items:center; gap:10px; flex-wrap:wrap;
   font-size:12px; font-weight:700;
   letter-spacing:.14em; text-transform:uppercase;
   color:var(--on-dark-mu);
   margin-bottom:10px;
 }
+.field__tag{
+  padding:4px 10px; border-radius:999px;
+  font-size:9.5px; letter-spacing:.12em;
+  background:rgba(212,166,43,.12);
+  border:1px solid var(--line-gold);
+  color:var(--gold);
+}
+.field[hidden]{ display:none; }
 .field input[type="text"],
 .field select,
 .field textarea{
