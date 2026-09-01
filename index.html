@@ -11,7 +11,7 @@
 <link rel="icon" href="assets/simbolo.png">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700&family=DM+Sans:opsz,wght@9..40,400;9..40,500;9..40,600;9..40,700&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="style.css">
 </head>
 <body>
@@ -27,7 +27,10 @@
       <a href="#processo">Processo</a>
       <a href="#investimento">Investimento</a>
     </nav>
-    <a href="#proximos-passos" class="btn btn--gold btn--sm">Próximos passos</a>
+    <a href="#proximos-passos" class="btn btn--gold btn--sm nav__cta">
+      <span class="btn__long">Próximos passos</span>
+      <span class="btn__short">Avançar</span>
+    </a>
   </div>
 </header>
 
@@ -384,10 +387,55 @@
         Se estiver de acordo com a proposta, o próximo passo é marcarmos uma reunião de alinhamento
         para eu trazer mais detalhes e já avançarmos com o briefing.
       </p>
-      <a class="btn btn--gold" href="https://wa.me/5511999999999?text=Ol%C3%A1%21%20Vi%20a%20proposta%20e%20quero%20avan%C3%A7ar." target="_blank" rel="noopener">
-        Marcar reunião de alinhamento
-      </a>
     </div>
+
+    <!-- formulário de aceite -->
+    <form class="accept reveal" id="form-aceite" novalidate>
+      <p class="panel__label">Aceite da proposta</p>
+      <h3 class="accept__title">Concordo com a proposta</h3>
+      <p class="accept__intro">
+        Preencha os campos abaixo para registrar o aceite. Ao enviar, o resumo é
+        encaminhado para a nossa conversa com tudo já preenchido.
+      </p>
+
+      <div class="field">
+        <label for="nome">Nome</label>
+        <input type="text" id="nome" name="nome" value="Nathalia Mazzei" autocomplete="name">
+      </div>
+
+      <div class="field">
+        <label for="escopo">O que deseja contratar</label>
+        <select id="escopo" name="escopo">
+          <option value="Site portfólio + gestão mensal de mídias">Site portfólio + gestão mensal de mídias</option>
+          <option value="Somente o site portfólio">Somente o site portfólio</option>
+          <option value="Somente a gestão mensal de mídias">Somente a gestão mensal de mídias</option>
+          <option value="Ainda tenho dúvidas, quero conversar">Ainda tenho dúvidas, quero conversar</option>
+        </select>
+      </div>
+
+      <div class="field">
+        <label for="pagamento">Forma de pagamento do site</label>
+        <select id="pagamento" name="pagamento">
+          <option value="À vista — R$ 2.100,00 (15% de desconto)">À vista — R$ 2.100,00 (15% de desconto)</option>
+          <option value="No cartão — 6x de R$ 417,00 sem juros">No cartão — 6x de R$ 417,00 sem juros</option>
+          <option value="Parcelado — R$ 1.250,00 + R$ 1.250,00">Parcelado — R$ 1.250,00 + R$ 1.250,00</option>
+          <option value="Prefiro definir na reunião">Prefiro definir na reunião</option>
+        </select>
+      </div>
+
+      <div class="field">
+        <label for="observacoes">Observações (opcional)</label>
+        <textarea id="observacoes" name="observacoes" placeholder="Dúvidas, ajustes ou qualquer ponto que queira alinhar antes de começarmos."></textarea>
+      </div>
+
+      <label class="check">
+        <input type="checkbox" id="concordo" name="concordo">
+        <span>Li e concordo com o escopo, o prazo e as condições apresentados nesta proposta.</span>
+      </label>
+
+      <button type="submit" class="btn btn--gold btn--block">Enviar aceite</button>
+      <p class="accept__note" id="aceite-nota">Marque o aceite acima para liberar o envio.</p>
+    </form>
   </div>
 </section>
 
@@ -413,6 +461,55 @@
   addEventListener('scroll', function () {
     nav.classList.toggle('is-stuck', scrollY > 40);
   }, { passive: true });
+
+  /* -----------------------------------------------------------
+     Formulário de aceite
+     >>> TROCAR AQUI PELO NÚMERO REAL (DDI + DDD + número) <<<
+     ----------------------------------------------------------- */
+  var WHATSAPP = '5511999999999';
+
+  var form = document.getElementById('form-aceite');
+  var nota = document.getElementById('aceite-nota');
+
+  form.addEventListener('submit', function (ev) {
+    ev.preventDefault();
+
+    var concordo = document.getElementById('concordo');
+    if (!concordo.checked) {
+      nota.textContent = 'É preciso marcar o aceite antes de enviar.';
+      nota.style.color = '#E0625C';
+      concordo.focus();
+      return;
+    }
+
+    var nome = document.getElementById('nome').value.trim() || 'Nathalia Mazzei';
+    var escopo = document.getElementById('escopo').value;
+    var pagamento = document.getElementById('pagamento').value;
+    var obs = document.getElementById('observacoes').value.trim();
+
+    var linhas = [
+      'ACEITE DA PROPOSTA',
+      '',
+      'Nome: ' + nome,
+      'Contratação: ' + escopo,
+      'Pagamento do site: ' + pagamento,
+      '',
+      'Confirmo que li e concordo com o escopo, o prazo e as condições da proposta.'
+    ];
+
+    if (obs) {
+      linhas.push('', 'Observações:', obs);
+    }
+
+    nota.textContent = 'Abrindo o WhatsApp com o aceite preenchido…';
+    nota.style.color = '';
+
+    window.open(
+      'https://wa.me/' + WHATSAPP + '?text=' + encodeURIComponent(linhas.join('\n')),
+      '_blank',
+      'noopener'
+    );
+  });
 </script>
 
 </body>
